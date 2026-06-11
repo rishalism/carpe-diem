@@ -63,6 +63,46 @@ class NotificationType(str, enum.Enum):
     member_joined = "member_joined"
 
 
+class UserRole(str, enum.Enum):
+    """Platform-level role. `user` is a normal end user with no admin access.
+
+    Ranked privilege: user < moderator < admin < super_admin. See
+    ``ROLE_RANK`` in ``app.middleware.admin_middleware`` for enforcement.
+    """
+
+    user = "user"
+    moderator = "moderator"
+    admin = "admin"
+    super_admin = "super_admin"
+
+
+class AccountStatus(str, enum.Enum):
+    active = "active"
+    inactive = "inactive"
+    suspended = "suspended"
+    banned = "banned"
+    deleted = "deleted"
+
+
+class ReportContentType(str, enum.Enum):
+    entry = "entry"
+    comment = "comment"
+
+
+class ReportStatus(str, enum.Enum):
+    open = "open"
+    under_review = "under_review"
+    action_taken = "action_taken"
+    dismissed = "dismissed"
+
+
+class ReportSeverity(str, enum.Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+    critical = "critical"
+
+
 def enum_column(py_enum, length: int = 32) -> SAEnum:
     """Build a portable, string-backed Enum column type."""
     return SAEnum(

@@ -6,6 +6,7 @@ import { useNotificationStore } from "../store/notificationStore";
 import { Avatar } from "../components/Common/Avatar";
 import { NotificationBell } from "../components/Common/NotificationBell";
 import { cn } from "../utils/cn";
+import { isStaff } from "../utils/roles";
 
 const navItems = [
   { to: "/", label: "Dashboard", emoji: "🏠", end: true },
@@ -56,6 +57,16 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       </div>
       <div className="mt-4 flex-1">
         <NavLinks onNavigate={onNavigate} />
+        {isStaff(user?.role) && (
+          <NavLink
+            to="/admin"
+            onClick={onNavigate}
+            className="mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
+          >
+            <span aria-hidden="true">🛡️</span>
+            Admin portal
+          </NavLink>
+        )}
       </div>
       <div className="space-y-2 border-t border-stone-100 pt-4 dark:border-stone-800">
         <button

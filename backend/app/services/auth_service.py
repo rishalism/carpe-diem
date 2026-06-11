@@ -5,7 +5,9 @@ import httpx
 from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.database.base import utcnow
 from app.exceptions import AuthError, BadRequestError, ConflictError
+from app.models.enums import AccountStatus
 from app.models.user import User
 from app.repositories.user_repo import UserRepository
 from app.schemas.auth import AuthResponse, RegisterRequest, TokenResponse
@@ -49,14 +51,31 @@ class AuthService:
         tokens = self._issue_tokens(user)
         return AuthResponse(user=user, **tokens.model_dump())
 
+    @staticmethod
+    def _ensure_active(user: User) -> None:
+        """Block login for non-active accounts (suspended/banned/deleted)."""
+        status = user.account_status
+        if status == AccountStatus.active:
+            return
+        if status == AccountStatus.suspended:
+            raise AuthError("This account is suspended. Contact support.")
+        if status == AccountStatus.banned:
+            raise AuthError("This account has been banned.")
+        if status == AccountStatus.deleted:
+            raise AuthError("This account no longer exists.")
+        # `inactive` is a derived/reporting state, not a login block.
+
     def authenticate(self, email: str, password: str) -> User:
         user = self.users.get_by_email(email.lower())
         if not user or not verify_password(password, user.password_hash or ""):
             raise AuthError("Invalid email or password")
+        self._ensure_active(user)
         return user
 
     def login(self, email: str, password: str) -> AuthResponse:
         user = self.authenticate(email, password)
+        user.last_active_at = utcnow()
+        self.db.commit()
         tokens = self._issue_tokens(user)
         return AuthResponse(user=user, **tokens.model_dump())
 
@@ -125,6 +144,8 @@ class AuthService:
             self.users.add(user)
         elif not user.google_id:
             user.google_id = google_id  # link Google to an existing email account
+        self._ensure_active(user)
+        user.last_active_at = utcnow()
         self.db.commit()
         self.db.refresh(user)
         tokens = self._issue_tokens(user)

@@ -24,10 +24,12 @@ from app.routers import (
     invitations,
     notifications,
     reactions,
+    reports,
     search,
     spaces,
     users,
 )
+from app.routers import admin as admin_router
 from app.services.storage_service import UPLOADS_DIR
 
 # Ensure all models are registered on Base.metadata.
@@ -82,6 +84,8 @@ app.include_router(attachments.gallery_router, prefix=api)
 app.include_router(search.router, prefix=api)
 app.include_router(config.router, prefix=api)
 app.include_router(dashboard.router, prefix=api)
+app.include_router(reports.router, prefix=api)
+app.include_router(admin_router.router, prefix=api)
 
 # Serve locally-stored uploads (no-op effect when Supabase Storage is used).
 os.makedirs(UPLOADS_DIR, exist_ok=True)

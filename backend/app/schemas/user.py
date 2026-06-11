@@ -4,6 +4,8 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
+from app.models.enums import UserRole
+
 
 class UserSummary(BaseModel):
     """Lightweight user info embedded in other responses."""
@@ -26,6 +28,8 @@ class UserResponse(BaseModel):
     dark_mode: bool
     notification_prefs: dict
     created_at: datetime
+    # Platform role — drives admin-portal access on the client.
+    role: UserRole = UserRole.user
 
 
 class UserUpdate(BaseModel):
