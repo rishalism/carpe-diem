@@ -131,10 +131,10 @@ export function SpaceDetail() {
         <div className="flex items-center gap-2">
           {isOwner && (
             <details className="relative">
-              <summary className="list-none cursor-pointer rounded-lg border border-stone-200 px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 dark:border-stone-700 dark:text-stone-300">
+              <summary className="list-none cursor-pointer rounded-lg border border-stone-200 px-3 py-2 text-sm text-stone-600 hover:bg-stone-800 dark:border-stone-700 dark:text-stone-300">
                 Manage
               </summary>
-              <div className="card absolute right-0 z-10 mt-1 w-44 p-1 text-sm">
+              <div className="card absolute  z-10 mt-1 w-44 p-1 text-sm">
                 <button
                   onClick={onArchiveToggle}
                   disabled={busy}

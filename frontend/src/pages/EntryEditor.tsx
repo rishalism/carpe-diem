@@ -60,7 +60,9 @@ export function EntryEditor() {
     entryService
       .get(spaceId, entryId!)
       .then((e) => active && hydrate(e))
-      .catch((err) => active && setError(apiErrorMessage(err, "Entry not found")))
+      .catch(
+        (err) => active && setError(apiErrorMessage(err, "Entry not found")),
+      )
       .finally(() => active && setLoadingEntry(false));
     return () => {
       active = false;
@@ -75,6 +77,10 @@ export function EntryEditor() {
         const e = await entryService.get(spaceId, entryId);
         setAiStatus(e.ai_status);
         setContentEnhanced(e.content_enhanced ?? null);
+        if (e.ai_status === "done" && e.content_enhanced) {
+          setContent(e.content_enhanced);
+          setEnhancedActive(true);
+        }
         if (e.ai_status !== "pending") window.clearInterval(id);
       } catch {
         window.clearInterval(id);
@@ -104,6 +110,7 @@ export function EntryEditor() {
         navigate(`/spaces/${spaceId}/entries/${created.id}`);
       } else {
         const updated = await updateEntry(spaceId, entryId!, payload);
+        navigate(`/spaces/${spaceId}`);
         hydrate(updated);
       }
     } catch (err) {
@@ -116,8 +123,13 @@ export function EntryEditor() {
   async function setEnhanced(active: boolean) {
     if (!entryId) return;
     try {
-      const updated = await updateEntry(spaceId, entryId, { enhanced_active: active });
+      const updated = await updateEntry(spaceId, entryId, {
+        enhanced_active: active,
+      });
       setEnhancedActive(updated.enhanced_active);
+      setContent(
+        active && contentEnhanced ? contentEnhanced : updated.content,
+      );
     } catch (err) {
       setError(apiErrorMessage(err, "Could not switch version"));
     }
@@ -138,13 +150,19 @@ export function EntryEditor() {
 
   // --- Read-only view (other members' entries) ---
   if (readOnly && entry) {
-    const body = enhancedActive && contentEnhanced ? contentEnhanced : entry.content;
+    const body =
+      enhancedActive && contentEnhanced ? contentEnhanced : entry.content;
     return (
       <article className="animate-fade-in">
-        <Link to={`/spaces/${spaceId}`} className="text-sm text-stone-400 hover:text-brand-600">
+        <Link
+          to={`/spaces/${spaceId}`}
+          className="text-sm text-stone-400 hover:text-brand-600"
+        >
           ← Back to space
         </Link>
-        <h1 className="mt-3 font-serif text-3xl font-semibold">{entry.title}</h1>
+        <h1 className="mt-3 font-serif text-3xl font-semibold">
+          {entry.title}
+        </h1>
         <p className="mt-1 text-sm text-stone-400">
           {entry.author.username} · {formatDateTime(entry.created_at)}
           {enhancedActive && contentEnhanced && " · ✨ AI-polished"}
@@ -163,7 +181,10 @@ export function EntryEditor() {
 
   return (
     <div className="animate-fade-in">
-      <Link to={`/spaces/${spaceId}`} className="text-sm text-stone-400 hover:text-brand-600">
+      <Link
+        to={`/spaces/${spaceId}`}
+        className="text-sm text-stone-400 hover:text-brand-600"
+      >
         ← Back to space
       </Link>
 
@@ -254,41 +275,41 @@ export function EntryEditor() {
           )}
           {aiStatus === "failed" && (
             <p className="text-sm text-amber-600">
-              AI polish didn’t complete. Your original entry is safe — try saving again.
+              AI polish didn’t complete. Your original entry is safe — try
+              saving again.
             </p>
           )}
           {contentEnhanced && (
-            <div className="inline-flex overflow-hidden rounded-xl border border-stone-200 text-sm dark:border-stone-700">
-              <button
-                onClick={() => setEnhanced(false)}
-                className={cn(
-                  "px-3 py-1.5",
-                  !enhancedActive
-                    ? "bg-brand-600 text-white"
-                    : "text-stone-600 dark:text-stone-300"
-                )}
-              >
-                Original
-              </button>
-              <button
-                onClick={() => setEnhanced(true)}
-                className={cn(
-                  "px-3 py-1.5",
-                  enhancedActive
-                    ? "bg-brand-600 text-white"
-                    : "text-stone-600 dark:text-stone-300"
-                )}
-              >
-                ✨ Enhanced
-              </button>
-            </div>
-          )}
-          {contentEnhanced && enhancedActive && (
-            <div className="mt-3 rounded-xl bg-brand-50 p-4 text-sm leading-relaxed text-stone-700 dark:bg-brand-900/20 dark:text-stone-200">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand-600">
-                AI-polished version
-              </p>
-              <p className="whitespace-pre-wrap">{contentEnhanced}</p>
+            <div className="flex items-center gap-3">
+              <div className="inline-flex overflow-hidden rounded-xl border border-stone-200 text-sm dark:border-stone-700">
+                <button
+                  onClick={() => setEnhanced(false)}
+                  className={cn(
+                    "px-3 py-1.5",
+                    !enhancedActive
+                      ? "bg-brand-600 text-white"
+                      : "text-stone-600 dark:text-stone-300",
+                  )}
+                >
+                  Original
+                </button>
+                <button
+                  onClick={() => setEnhanced(true)}
+                  className={cn(
+                    "px-3 py-1.5",
+                    enhancedActive
+                      ? "bg-brand-600 text-white"
+                      : "text-stone-600 dark:text-stone-300",
+                  )}
+                >
+                  ✨ Enhanced
+                </button>
+              </div>
+              <span className="text-xs text-stone-400">
+                {enhancedActive
+                  ? "AI-polished version is shown in the editor"
+                  : "Original version is shown in the editor"}
+              </span>
             </div>
           )}
         </div>
@@ -310,7 +331,11 @@ export function EntryEditor() {
         title="Delete this entry?"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setConfirmDelete(false)} disabled={saving}>
+            <Button
+              variant="secondary"
+              onClick={() => setConfirmDelete(false)}
+              disabled={saving}
+            >
               Cancel
             </Button>
             <Button variant="danger" onClick={onDelete} loading={saving}>
