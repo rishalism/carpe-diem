@@ -3,7 +3,7 @@ import type { AIMonitoring, StorageStats, SystemHealth } from "../../types";
 import { adminService } from "../../services/adminService";
 import { apiErrorMessage } from "../../services/api";
 import { Card } from "../../components/Common/Card";
-import { FullPageSpinner } from "../../components/Common/Spinner";
+import { Skeleton, SkeletonStats } from "../../components/Common/Skeleton";
 import { Badge } from "../../components/Admin/Badge";
 
 function formatBytes(n: number): string {
@@ -53,7 +53,18 @@ export function AdminOperations() {
   }, []);
 
   if (error) return <p className="text-sm text-red-500">{error}</p>;
-  if (!ai || !storage || !health) return <FullPageSpinner />;
+  if (!ai || !storage || !health)
+    return (
+      <div className="space-y-8">
+        <Skeleton className="h-8 w-44" />
+        {[0, 1, 2].map((s) => (
+          <div key={s} className="space-y-3">
+            <Skeleton className="h-3 w-40" />
+            <SkeletonStats count={4} />
+          </div>
+        ))}
+      </div>
+    );
 
   return (
     <div className="animate-fade-in space-y-8">

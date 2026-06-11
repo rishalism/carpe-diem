@@ -3,7 +3,7 @@ import type { AnalyticsSummary } from "../../types";
 import { adminService } from "../../services/adminService";
 import { apiErrorMessage } from "../../services/api";
 import { Card } from "../../components/Common/Card";
-import { FullPageSpinner } from "../../components/Common/Spinner";
+import { Skeleton, SkeletonStats } from "../../components/Common/Skeleton";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -27,7 +27,15 @@ export function AdminAnalytics() {
   }, []);
 
   if (error) return <p className="text-sm text-red-500">{error}</p>;
-  if (!data) return <FullPageSpinner />;
+  if (!data)
+    return (
+      <div className="space-y-8">
+        <Skeleton className="h-8 w-40" />
+        <SkeletonStats count={3} cols="grid-cols-3" />
+        <SkeletonStats count={4} />
+        <SkeletonStats count={5} cols="grid-cols-1 gap-2" />
+      </div>
+    );
 
   const maxTrend = Math.max(1, ...data.growth_trend.map((p) => p.count));
   const reg = data.funnel[0]?.count || 1;

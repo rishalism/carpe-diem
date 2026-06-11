@@ -25,3 +25,24 @@
     @apply w-full rounded-xl border border-stone-200 bg-white px-3.5 py-2.5 text-sm text-stone-800 placeholder:text-stone-400 transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:focus:ring-brand-900;
   }
 }
+
+/* Guarantee a 44px hit area on touch devices without changing the visual size.
+   pointer: coarse targets touch input specifically, so mouse users keep tight UI. */
+@media (pointer: coarse) {
+  .tap-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* A <details> that acts as a collapsible section on mobile but is always
+   expanded (summary hidden) on >= sm. Render WITHOUT the `open` attribute so it
+   starts collapsed on phones for a cleaner first viewport. */
+@media (min-width: 640px) {
+  .sm-disclosure > summary {
+    display: none;
+  }
+  .sm-disclosure:not([open]) > :not(summary) {
+    display: revert;
+  }
+}

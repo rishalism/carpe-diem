@@ -4,7 +4,7 @@ import type { AdminDashboard as Dash } from "../../types";
 import { adminService } from "../../services/adminService";
 import { apiErrorMessage } from "../../services/api";
 import { Card } from "../../components/Common/Card";
-import { FullPageSpinner } from "../../components/Common/Spinner";
+import { SkeletonStats, SkeletonChart, Skeleton } from "../../components/Common/Skeleton";
 
 function Kpi({
   value,
@@ -50,7 +50,17 @@ export function AdminDashboard() {
   }, []);
 
   if (error) return <p className="text-sm text-red-500">{error}</p>;
-  if (!data) return <FullPageSpinner />;
+  if (!data)
+    return (
+      <div className="space-y-8">
+        <Skeleton className="h-8 w-40" />
+        <SkeletonStats count={8} />
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-48" />
+          <SkeletonChart />
+        </div>
+      </div>
+    );
 
   const maxTrend = Math.max(1, ...data.signups_trend.map((p) => p.count));
 

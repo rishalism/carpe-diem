@@ -51,40 +51,45 @@ export function Search() {
           value={filters.q ?? ""}
           onChange={(e) => set("q", e.target.value)}
         />
-        <div className="grid gap-3 sm:grid-cols-3">
-          <select
-            className="input-base"
-            value={filters.space_id ?? ""}
-            onChange={(e) => set("space_id", e.target.value)}
-            aria-label="Filter by space"
-          >
-            <option value="">All spaces</option>
-            {spaces.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-          <select
-            className="input-base"
-            value={filters.mood ?? ""}
-            onChange={(e) => set("mood", (e.target.value || undefined) as Mood | undefined)}
-            aria-label="Filter by mood"
-          >
-            <option value="">Any mood</option>
-            {MOODS.map((m) => (
-              <option key={m.value} value={m.value}>
-                {m.emoji} {m.label}
-              </option>
-            ))}
-          </select>
-          <Input
-            name="tag"
-            placeholder="Tag"
-            value={filters.tag ?? ""}
-            onChange={(e) => set("tag", e.target.value)}
-          />
-        </div>
+        <details className="sm-disclosure space-y-3">
+          <summary className="tap-target flex list-none cursor-pointer items-center text-sm font-medium text-stone-500 [&::-webkit-details-marker]:hidden dark:text-stone-400">
+            Filters ▾
+          </summary>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <select
+              className="input-base"
+              value={filters.space_id ?? ""}
+              onChange={(e) => set("space_id", e.target.value)}
+              aria-label="Filter by space"
+            >
+              <option value="">All spaces</option>
+              {spaces.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+            <select
+              className="input-base"
+              value={filters.mood ?? ""}
+              onChange={(e) => set("mood", (e.target.value || undefined) as Mood | undefined)}
+              aria-label="Filter by mood"
+            >
+              <option value="">Any mood</option>
+              {MOODS.map((m) => (
+                <option key={m.value} value={m.value}>
+                  {m.emoji} {m.label}
+                </option>
+              ))}
+            </select>
+            <Input
+              name="tag"
+              placeholder="Tag"
+              value={filters.tag ?? ""}
+              onChange={(e) => set("tag", e.target.value)}
+            />
+          </div>
+        </details>
         <div className="flex justify-end">
           <Button type="submit" loading={loading}>
             Search

@@ -22,9 +22,11 @@ const variants: Record<Variant, string> = {
   danger: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm",
 };
 
+// Visual sizes stay compact; min-h-[44px] guarantees a 44px touch target on
+// mobile (WCAG 2.5.5 / Apple HIG), released on sm+ where the pointer is precise.
 const sizes: Record<Size, string> = {
-  sm: "text-sm px-3 py-1.5 rounded-lg gap-1.5",
-  md: "text-sm px-4 py-2.5 rounded-xl gap-2",
+  sm: "text-sm px-3 py-1.5 rounded-lg gap-1.5 min-h-[44px] sm:min-h-0",
+  md: "text-sm px-4 py-2.5 rounded-xl gap-2 min-h-[44px] sm:min-h-0",
   lg: "text-base px-5 py-3 rounded-xl gap-2",
 };
 

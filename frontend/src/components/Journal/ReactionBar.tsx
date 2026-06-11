@@ -46,7 +46,7 @@ export function ReactionBar({ spaceId, entryId }: { spaceId: string; entryId: st
             aria-pressed={mine}
             aria-label={r.label}
             className={cn(
-              "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition",
+              "tap-target flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition",
               mine
                 ? "border-brand-400 bg-brand-50 dark:bg-brand-900/40"
                 : "border-stone-200 hover:border-stone-300 dark:border-stone-700"

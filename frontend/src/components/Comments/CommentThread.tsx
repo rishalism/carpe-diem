@@ -156,7 +156,13 @@ function CommentItem({ comment, spaceId, entryId, onChanged, depth = 0 }: ItemPr
   }
 
   return (
-    <li className={depth > 0 ? "ml-5 border-l border-stone-100 pl-4 dark:border-stone-800" : ""}>
+    <li
+      className={
+        depth > 0
+          ? "ml-2 border-l border-stone-100 pl-3 dark:border-stone-800 sm:ml-5 sm:pl-4"
+          : ""
+      }
+    >
       <div className="flex gap-3">
         <Avatar name={comment.author.username} src={comment.author.avatar_url} size={32} />
         <div className="min-w-0 flex-1">
@@ -191,16 +197,16 @@ function CommentItem({ comment, spaceId, entryId, onChanged, depth = 0 }: ItemPr
           {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
 
           {!editing && (
-            <div className="mt-1 flex gap-3 text-xs text-stone-400">
-              <button onClick={() => setReplying((v) => !v)} className="hover:text-brand-600">
+            <div className="mt-1 flex gap-4 text-xs text-stone-400">
+              <button onClick={() => setReplying((v) => !v)} className="py-1 hover:text-brand-600">
                 Reply
               </button>
               {isOwn && (
                 <>
-                  <button onClick={() => setEditing(true)} className="hover:text-brand-600">
+                  <button onClick={() => setEditing(true)} className="py-1 hover:text-brand-600">
                     Edit
                   </button>
-                  <button onClick={remove} className="hover:text-red-500" disabled={busy}>
+                  <button onClick={remove} className="py-1 hover:text-red-500" disabled={busy}>
                     Delete
                   </button>
                 </>

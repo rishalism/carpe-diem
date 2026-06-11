@@ -5,7 +5,7 @@ import { adminService } from "../../services/adminService";
 import { apiErrorMessage } from "../../services/api";
 import { Card } from "../../components/Common/Card";
 import { Button } from "../../components/Common/Button";
-import { FullPageSpinner } from "../../components/Common/Spinner";
+import { Skeleton, SkeletonLines } from "../../components/Common/Skeleton";
 import {
   ReportStatusBadge,
   SeverityBadge,
@@ -37,7 +37,20 @@ export function AdminReportCase() {
   }, [load]);
 
   if (error) return <p className="text-sm text-red-500">{error}</p>;
-  if (!c) return <FullPageSpinner />;
+  if (!c)
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-4 w-28" />
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-56" />
+          <Skeleton className="h-4 w-80" />
+        </div>
+        <Card className="space-y-3 p-4">
+          <Skeleton className="h-5 w-40" />
+          <SkeletonLines lines={5} />
+        </Card>
+      </div>
+    );
 
   const closed = c.status === "action_taken" || c.status === "dismissed";
 

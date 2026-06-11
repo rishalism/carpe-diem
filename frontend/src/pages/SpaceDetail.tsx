@@ -128,13 +128,13 @@ export function SpaceDetail() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           {isOwner && (
             <details className="relative">
-              <summary className="list-none cursor-pointer rounded-lg border border-stone-200 px-3 py-2 text-sm text-stone-600 hover:bg-stone-800 dark:border-stone-700 dark:text-stone-300">
+              <summary className="tap-target flex list-none cursor-pointer items-center rounded-lg border border-stone-200 px-3 py-2 text-sm text-stone-600 hover:bg-stone-100 dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800">
                 Manage
               </summary>
-              <div className="card absolute  z-10 mt-1 w-44 p-1 text-sm">
+              <div className="card absolute right-0 z-10 mt-1 w-44 p-1 text-sm">
                 <button
                   onClick={onArchiveToggle}
                   disabled={busy}
@@ -152,11 +152,18 @@ export function SpaceDetail() {
             </details>
           )}
           {isOwner && (
-            <Button variant="secondary" onClick={() => setInviteOpen(true)}>
+            <Button
+              variant="secondary"
+              className="flex-1 sm:flex-none"
+              onClick={() => setInviteOpen(true)}
+            >
               Invite
             </Button>
           )}
-          <Button onClick={() => navigate(`/spaces/${space.id}/entries/new`)}>
+          <Button
+            className="flex-1 sm:flex-none"
+            onClick={() => navigate(`/spaces/${space.id}/entries/new`)}
+          >
             + New entry
           </Button>
         </div>

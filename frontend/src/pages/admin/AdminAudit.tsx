@@ -6,6 +6,7 @@ import { Card } from "../../components/Common/Card";
 import { Button } from "../../components/Common/Button";
 import { Input } from "../../components/Common/Input";
 import { Spinner } from "../../components/Common/Spinner";
+import { SkeletonTable } from "../../components/Common/Skeleton";
 
 const RESOURCE_TYPES = ["", "user", "report", "entry", "comment"];
 
@@ -83,6 +84,9 @@ export function AdminAudit() {
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
+      {!data ? (
+        <SkeletonTable rows={12} cols={6} />
+      ) : (
       <Card className="overflow-hidden p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -134,6 +138,7 @@ export function AdminAudit() {
           <p className="py-10 text-center text-sm text-stone-400">No matching entries.</p>
         )}
       </Card>
+      )}
 
       {data && data.pages > 1 && (
         <div className="flex items-center justify-between text-sm">

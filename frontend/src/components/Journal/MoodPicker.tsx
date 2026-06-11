@@ -23,7 +23,7 @@ export function MoodPicker({ value, onChange }: MoodPickerProps) {
               onClick={() => onChange(active ? null : m.value)}
               aria-pressed={active}
               className={cn(
-                "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition",
+                "tap-target flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition",
                 active
                   ? "border-brand-400 bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-200"
                   : "border-stone-200 text-stone-600 hover:border-stone-300 dark:border-stone-700 dark:text-stone-300"

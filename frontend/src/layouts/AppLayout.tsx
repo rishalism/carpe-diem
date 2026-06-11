@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { useUIStore } from "../store/uiStore";
 import { useNotificationStore } from "../store/notificationStore";
@@ -100,7 +100,12 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppLayout() {
   const [drawer, setDrawer] = useState(false);
+  const location = useLocation();
   const fetchNotifications = useNotificationStore((s) => s.fetch);
+
+  // Full-screen, distraction-free editor: hide the bottom tab bar so the sticky
+  // save bar owns the bottom of the screen.
+  const hideTabs = /\/entries\//.test(location.pathname);
 
   useEffect(() => {
     fetchNotifications();
@@ -127,7 +132,7 @@ export function AppLayout() {
           <button
             onClick={() => setDrawer(true)}
             aria-label="Open menu"
-            className="rounded-lg p-2 text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
+            className="tap-target flex items-center justify-center rounded-lg p-2 text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
           >
             ☰
           </button>
@@ -150,10 +155,39 @@ export function AppLayout() {
       )}
 
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-10">
+        <div className="mx-auto w-full max-w-5xl px-4 py-6 pb-24 sm:px-6 sm:py-10 lg:pb-10">
           <Outlet />
         </div>
       </main>
+
+      {/* Mobile bottom tab bar — thumb-reachable primary nav (desktop uses the sidebar) */}
+      {!hideTabs && (
+        <nav
+          className="fixed inset-x-0 bottom-0 z-30 flex border-t border-stone-100 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-stone-800 dark:bg-stone-900/95 lg:hidden"
+          aria-label="Primary"
+        >
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                cn(
+                  "flex min-h-[56px] flex-1 flex-col items-center justify-center gap-0.5 py-2 text-xs",
+                  isActive
+                    ? "text-brand-700 dark:text-brand-200"
+                    : "text-stone-500 dark:text-stone-400"
+                )
+              }
+            >
+              <span aria-hidden="true" className="text-lg">
+                {item.emoji}
+              </span>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }

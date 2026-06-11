@@ -8,7 +8,7 @@ import { hasRole } from "../../utils/roles";
 import { SPACE_TYPE_MAP } from "../../utils/constants";
 import { Card } from "../../components/Common/Card";
 import { Button } from "../../components/Common/Button";
-import { FullPageSpinner } from "../../components/Common/Spinner";
+import { Skeleton, SkeletonStats, SkeletonLines } from "../../components/Common/Skeleton";
 import { Badge } from "../../components/Admin/Badge";
 import { ActionModal } from "../../components/Admin/ActionModal";
 
@@ -41,7 +41,20 @@ export function AdminSpaceDetail() {
         </Link>
       </div>
     );
-  if (!space) return <FullPageSpinner />;
+  if (!space)
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-4 w-28" />
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-52" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <SkeletonStats count={3} cols="grid-cols-3" />
+        <Card className="space-y-3 p-4">
+          <SkeletonLines lines={4} />
+        </Card>
+      </div>
+    );
 
   const canAdmin = hasRole(me?.role, "admin");
 

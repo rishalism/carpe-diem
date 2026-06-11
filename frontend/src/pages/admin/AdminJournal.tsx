@@ -6,7 +6,8 @@ import { apiErrorMessage } from "../../services/api";
 import { MOOD_MAP } from "../../utils/constants";
 import { Card } from "../../components/Common/Card";
 import { Button } from "../../components/Common/Button";
-import { Spinner, FullPageSpinner } from "../../components/Common/Spinner";
+import { Spinner } from "../../components/Common/Spinner";
+import { Skeleton, SkeletonStats, SkeletonTable } from "../../components/Common/Skeleton";
 import { Badge } from "../../components/Admin/Badge";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -50,7 +51,14 @@ export function AdminJournal() {
   }, [page]);
 
   if (error) return <p className="text-sm text-red-500">{error}</p>;
-  if (!agg) return <FullPageSpinner />;
+  if (!agg)
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-56" />
+        <SkeletonStats count={7} />
+        <SkeletonTable rows={8} cols={8} />
+      </div>
+    );
 
   const moods = Object.entries(agg.mood_counts).sort((a, b) => b[1] - a[1]);
   const maxMood = moods.length ? moods[0][1] : 0;
@@ -97,6 +105,9 @@ export function AdminJournal() {
         entries can be reviewed under Reports.
       </div>
 
+      {!data ? (
+        <SkeletonTable rows={8} cols={8} />
+      ) : (
       <Card className="overflow-hidden p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -151,6 +162,7 @@ export function AdminJournal() {
           </div>
         )}
       </Card>
+      )}
 
       {data && data.pages > 1 && (
         <div className="flex items-center justify-between text-sm">

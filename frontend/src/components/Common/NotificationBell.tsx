@@ -36,7 +36,7 @@ export function NotificationBell() {
       <button
         onClick={toggle}
         aria-label="Notifications"
-        className="relative rounded-lg p-2 text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
+        className="tap-target relative flex items-center justify-center rounded-lg p-2 text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"
       >
         <span aria-hidden="true">🔔</span>
         {unreadCount > 0 && (

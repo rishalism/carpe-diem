@@ -11,6 +11,7 @@ import { apiErrorMessage } from "../../services/api";
 import { Card } from "../../components/Common/Card";
 import { Button } from "../../components/Common/Button";
 import { Spinner } from "../../components/Common/Spinner";
+import { SkeletonTable } from "../../components/Common/Skeleton";
 import { ReportStatusBadge, SeverityBadge } from "../../components/Admin/Badge";
 
 const STATUSES: ReportStatus[] = ["open", "under_review", "action_taken", "dismissed"];
@@ -97,6 +98,9 @@ export function AdminReports() {
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
+      {!data ? (
+        <SkeletonTable rows={10} cols={6} />
+      ) : (
       <Card className="overflow-hidden p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -149,6 +153,7 @@ export function AdminReports() {
           </p>
         )}
       </Card>
+      )}
 
       {data && data.pages > 1 && (
         <div className="flex items-center justify-between text-sm">

@@ -206,38 +206,47 @@ export function EntryEditor() {
           onChange={(e) => setContent(e.target.value)}
         />
 
-        <MoodPicker value={mood} onChange={setMood} />
+        {/* Secondary controls — collapsed by default on mobile so the title
+            and body own the first viewport; always expanded on sm+. */}
+        <details className="sm-disclosure space-y-5 rounded-xl border border-stone-100 p-4 dark:border-stone-800 sm:border-0 sm:p-0">
+          <summary className="tap-target flex list-none cursor-pointer items-center text-sm font-medium text-stone-500 [&::-webkit-details-marker]:hidden dark:text-stone-400">
+            Mood, tags &amp; AI ▾
+          </summary>
 
-        <Input
-          label="Tags"
-          name="tags"
-          placeholder="travel, family, milestones (comma separated)"
-          value={tagsRaw}
-          onChange={(e) => setTagsRaw(e.target.value)}
-        />
+          <MoodPicker value={mood} onChange={setMood} />
 
-        {/* AI enhancement control */}
-        {aiEnabled ? (
-          <label className="flex items-center gap-2 text-sm text-stone-600 dark:text-stone-300">
-            <input
-              type="checkbox"
-              checked={useAi}
-              onChange={(e) => setUseAi(e.target.checked)}
-            />
-            ✨ Polish with AI
-            <span className="text-xs text-stone-400">
-              (fixes grammar &amp; spelling — your words, tidied up)
-            </span>
-          </label>
-        ) : (
-          <p className="text-xs text-stone-400">
-            ✨ AI polish is available once OpenRouter is configured.
-          </p>
-        )}
+          <Input
+            label="Tags"
+            name="tags"
+            placeholder="travel, family, milestones (comma separated)"
+            value={tagsRaw}
+            onChange={(e) => setTagsRaw(e.target.value)}
+          />
+
+          {/* AI enhancement control */}
+          {aiEnabled ? (
+            <label className="flex items-center gap-2 text-sm text-stone-600 dark:text-stone-300">
+              <input
+                type="checkbox"
+                checked={useAi}
+                onChange={(e) => setUseAi(e.target.checked)}
+              />
+              ✨ Polish with AI
+              <span className="text-xs text-stone-400">
+                (fixes grammar &amp; spelling — your words, tidied up)
+              </span>
+            </label>
+          ) : (
+            <p className="text-xs text-stone-400">
+              ✨ AI polish is available once OpenRouter is configured.
+            </p>
+          )}
+        </details>
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <div className="flex items-center justify-between">
+        {/* Sticky save bar on mobile so the primary action is always reachable. */}
+        <div className="sticky bottom-0 -mx-4 flex items-center justify-between border-t border-stone-100 bg-stone-50/90 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur dark:border-stone-800 dark:bg-stone-950/90 sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:pb-0 sm:backdrop-blur-none">
           <div>
             {!isNew && (
               <Button

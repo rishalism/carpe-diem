@@ -7,7 +7,7 @@ import { useAuthStore } from "../../store/authStore";
 import { hasRole } from "../../utils/roles";
 import { Card } from "../../components/Common/Card";
 import { Button } from "../../components/Common/Button";
-import { FullPageSpinner } from "../../components/Common/Spinner";
+import { Skeleton, SkeletonStats, SkeletonLines } from "../../components/Common/Skeleton";
 import { RoleBadge, StatusBadge } from "../../components/Admin/Badge";
 import { ActionModal } from "../../components/Admin/ActionModal";
 
@@ -60,7 +60,20 @@ export function AdminUserDetail() {
         </Link>
       </div>
     );
-  if (!user) return <FullPageSpinner />;
+  if (!user)
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-4 w-24" />
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-48" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+        <SkeletonStats count={5} />
+        <Card className="space-y-3 p-4">
+          <SkeletonLines lines={4} />
+        </Card>
+      </div>
+    );
 
   const canAdmin = hasRole(me?.role, "admin");
   const canSuper = hasRole(me?.role, "super_admin");
