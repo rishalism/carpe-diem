@@ -1,0 +1,6 @@
+# Root-level ignores (see backend/.gitignore and frontend/.gitignore too)
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/

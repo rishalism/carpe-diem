@@ -1,0 +1,35 @@
+# Render Blueprint — deploys the carpe diem FastAPI backend.
+# The frontend deploys separately on Vercel (see frontend/vercel.json).
+services:
+  - type: web
+    name: carpe-diem-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      # Set these in the Render dashboard (mark as secret):
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false # e.g. https://your-app.vercel.app
+      - key: FRONTEND_URL
+        sync: false
+      # Optional integrations (Phase 3/4):
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
